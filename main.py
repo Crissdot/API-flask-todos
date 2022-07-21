@@ -1,6 +1,6 @@
 import unittest
 from flask import request, make_response, redirect, render_template, session
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app import create_app
 from app.firestore_service import get_todos
@@ -27,14 +27,12 @@ def home():
 @login_required
 def ip():
     user_ip = session.get('user_ip')
-    username = session.get('username')
+    username = current_user.id
 
     context = {
         'user_ip': user_ip,
         'todos': get_todos(user_id=username),
         'username': username,
     }
-
-    
 
     return render_template('ip.html', **context)
