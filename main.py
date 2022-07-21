@@ -1,8 +1,9 @@
-from flask import request, make_response, redirect, render_template, session
 import unittest
+from flask import request, make_response, redirect, render_template, session
+from flask_login import login_required
 
 from app import create_app
-from app.firestore_service import get_users, get_todos
+from app.firestore_service import get_todos
 
 app = create_app()
 
@@ -23,6 +24,7 @@ def home():
     return response
 
 @app.route('/ip')
+@login_required
 def ip():
     user_ip = session.get('user_ip')
     username = session.get('username')
@@ -33,9 +35,6 @@ def ip():
         'username': username,
     }
 
-    users = get_users()
-
-    for user in users:
-        print(user.to_dict())
+    
 
     return render_template('ip.html', **context)
