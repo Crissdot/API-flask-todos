@@ -16,14 +16,6 @@
         <h3>Tu IP es {{ user_ip }}</h3>
     {% endif %}
 
-    <div class="container">
-        <!-- <form action="{{ url_for('ip' ) }}" method="POST">
-            {{ login_form.username.label }}
-            {{ login_form.username }}
-        </form> -->
-        {{ wtf.quick_form(login_form) }}
-    </div>
-
     <ul>
         {% for todo in todos %}
             {{ macros.render_todo(todo) }}

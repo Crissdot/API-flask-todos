@@ -1,4 +1,4 @@
-from flask import request, make_response, redirect, render_template, session, url_for, flash
+from flask import request, make_response, redirect, render_template, session
 import unittest
 
 from app import create_app
@@ -26,25 +26,15 @@ def home():
     session['user_ip'] = user_ip
     return response
 
-@app.route('/ip', methods=['GET', 'POST'])
+@app.route('/ip')
 def ip():
     user_ip = session.get('user_ip')
-    login_form = LoginForm()
     username = session.get('username')
 
     context = {
         'user_ip': user_ip,
         'todos': todos,
-        'login_form': login_form,
         'username': username,
     }
-
-    if login_form.validate_on_submit():
-        username = login_form.username.data
-        session['username'] = username
-
-        flash('Nombre de usuario registrado con éxito')
-
-        return redirect(url_for('home'))
 
     return render_template('ip.html', **context)
