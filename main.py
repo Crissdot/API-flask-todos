@@ -2,13 +2,9 @@ from flask import request, make_response, redirect, render_template, session
 import unittest
 
 from app import create_app
-from app.forms import LoginForm
+from app.firestore_service import get_users, get_todos
 
 app = create_app()
-
-todos = ['TODO1', 'TODO2', 'TODO3', 'TODO4', 'TODO5']
-
-
 
 @app.cli.command()
 def test():
@@ -33,8 +29,13 @@ def ip():
 
     context = {
         'user_ip': user_ip,
-        'todos': todos,
+        'todos': get_todos(user_id=username),
         'username': username,
     }
+
+    users = get_users()
+
+    for user in users:
+        print(user.to_dict())
 
     return render_template('ip.html', **context)
