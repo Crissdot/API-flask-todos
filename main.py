@@ -1,9 +1,10 @@
 import unittest
-from flask import request, make_response, redirect, render_template, session
+from flask import request, make_response, redirect, render_template, session, flash, url_for
 from flask_login import login_required, current_user
 
 from app import create_app
-from app.firestore_service import get_todos
+from app.forms import TodoForm
+from app.firestore_service import get_todos, create_todo
 
 app = create_app()
 
@@ -23,16 +24,26 @@ def home():
     session['user_ip'] = user_ip
     return response
 
-@app.route('/ip')
+@app.route('/ip', methods=['GET', 'POST'])
 @login_required
 def ip():
     user_ip = session.get('user_ip')
     username = current_user.id
+    todo_form = TodoForm()
 
     context = {
         'user_ip': user_ip,
         'todos': get_todos(user_id=username),
         'username': username,
+        'todo_form': todo_form,
     }
+
+    if todo_form.validate_on_submit():
+        description = todo_form.description.data
+
+        create_todo(user_id=username, description=description)
+
+        flash('Tarea creada')
+        return redirect(url_for('ip'))
 
     return render_template('ip.html', **context)

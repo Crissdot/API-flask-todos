@@ -18,3 +18,7 @@ def get_todos(user_id):
 def create_user(user_data):
     user_ref = db.collection('users').document(user_data.username)
     user_ref.set({ 'password': user_data.password })
+
+def create_todo(user_id, description):
+    todos_ref = db.collection('users').document(user_id).collection('todos')
+    todos_ref.add({ 'description': description })
