@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user
 
 from . import auth
 from app.forms import LoginForm
@@ -34,3 +34,12 @@ def login():
         flash('El usuario o la contraseña son incorrectos')
 
     return render_template('login.html', **context)
+
+@auth.route('logout')
+@login_required
+def logout():
+    logout_user()
+
+    flash('Regresa pronto')
+
+    return redirect(url_for('auth.login'))
